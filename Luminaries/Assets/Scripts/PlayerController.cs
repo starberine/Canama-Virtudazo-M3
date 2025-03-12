@@ -5,66 +5,67 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f;
     public float jumpForce = 7f;
     public float groundDist = 0.6f;
-    public LayerMask terrainLayer;  // Assign the ground layer in the Inspector
+    public float maxZMovement = 2f; // Limit Z movement
+    public LayerMask terrainLayer;
 
     private bool isGrounded;
-    private float groundCheckDelay = 0.1f;
-    private float groundCheckTimer;
     private Rigidbody rb;
+    private Animator anim;
+    private float startZ;
 
     void Start()
     {
-        rb = gameObject.GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         rb.constraints = RigidbodyConstraints.FreezeRotation;
-        terrainLayer = LayerMask.GetMask("Terrain");  // Set the layer mask in Start()  // Prevents tipping over
+        anim = GetComponent<Animator>();
+        startZ = transform.position.z; // Store the starting Z position
     }
 
     void FixedUpdate()
     {
-        // Raycast to check if grounded
-        RaycastHit hit;
-        Vector3 castPos = transform.position;
-        castPos.y += 0.1f;  // Start raycast slightly above the character
+        // 🔥 FIXED: PROPER GROUND DETECTION 🔥
+        Vector3 boxSize = new Vector3(0.6f, 0.2f, 0.6f); // Adjust size for accurate detection
+        isGrounded = Physics.CheckBox(transform.position + Vector3.down * 0.5f, boxSize / 2, Quaternion.identity, terrainLayer);
 
-        Debug.DrawRay(castPos, -transform.up * (groundDist + 0.8f), Color.red);
-        Debug.DrawRay(castPos + Vector3.left * 0.3f, -transform.up * (groundDist + 0.5f), Color.green);  // Visualize left ray
-        Debug.DrawRay(castPos + Vector3.right * 0.3f, -transform.up * (groundDist + 0.5f), Color.blue);  // Visualize right ray  // Visualize the raycast
+        Debug.Log("🔥 isGrounded: " + isGrounded);
 
-        if (Physics.SphereCast(castPos, 0.3f, -transform.up, out hit, groundDist + 0.5f, terrainLayer))
-        {
-            if (hit.collider != null)
-            {
-                isGrounded = true;
-                groundCheckTimer = groundCheckDelay;  // Reset timer when grounded
-            }
-        }
-        else if (groundCheckTimer > 0)
-        {
-            groundCheckTimer -= Time.deltaTime;
-        }
-        else
-        {
-            isGrounded = false;
-        }
-
-        Debug.Log("isGrounded: " + isGrounded);  // Debug to check if grounded
-
-        // Horizontal (A/D) and Vertical (W/S) movement
+        // Get movement input
         float moveX = Input.GetAxis("Horizontal");
-        float moveZ = Input.GetAxis("Vertical");
-        Vector3 move = new Vector3(moveX * moveSpeed, rb.velocity.y, moveZ * moveSpeed);
-        rb.velocity = new Vector3(move.x, rb.velocity.y, move.z);  // Preserve Y-axis velocity
+        float moveZ = Input.GetAxis("Vertical") * 0.5f;
 
-        // Flip sprite based on horizontal direction only
+        // Apply movement
+        Vector3 move = new Vector3(moveX * moveSpeed, rb.velocity.y, moveZ * moveSpeed);
+        rb.velocity = move;
+
+        // Limit movement along the Z-axis
+        float clampedZ = Mathf.Clamp(transform.position.z, startZ - maxZMovement, startZ + maxZMovement);
+        transform.position = new Vector3(transform.position.x, transform.position.y, clampedZ);
+
+        // Walking animation (ONLY if moving and on ground)
+        anim.SetBool("isRunning", (moveX != 0 || moveZ != 0) && isGrounded);
+
+        // Flip sprite based on X movement
         if (moveX != 0)
         {
             transform.localScale = new Vector3(Mathf.Sign(moveX), 1, 1);
         }
+    }
 
-        // Jumping
+    void Update()
+    {
+        // 🔥 FIX: JUMP ONLY WHEN PRESSING SPACEBAR & ON GROUND 🔥
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);  // Apply jump force
+            Debug.Log("🔥 JUMP PRESSED! 🔥");
+            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+            anim.SetTrigger("Jump");
+        }
+
+        // 🔥 FIX: RESET JUMP ANIMATION WHEN LANDING 🔥
+        if (isGrounded && anim.GetCurrentAnimatorStateInfo(0).IsName("Jump"))
+        {
+            Debug.Log("🔥 LANDED! RESET JUMP 🔥");
+            anim.ResetTrigger("Jump");
         }
     }
 }
