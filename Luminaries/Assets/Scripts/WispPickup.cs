@@ -9,6 +9,7 @@ public class WispPickup : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("Wisp collected!"); 
+            ScoreManager.instance.GainWisp();
 
             if (pointLight != null)
             {

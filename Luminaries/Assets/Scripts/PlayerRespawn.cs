@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class PlayerRespawn : MonoBehaviour
 {
-    public Transform respawnPoint; // Assign in Inspector
-    public int playerHealth = 3; // Player's health
+    public Transform respawnPoint; 
+    public int playerHealth = 3; 
 
-    private Rigidbody rb; // Rigidbody reference
+    private Rigidbody rb; 
 
     void Start()
     {
@@ -19,17 +19,17 @@ public class PlayerRespawn : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collided with: " + other.gameObject.name); // Debugging the collision
+        Debug.Log("Collided with: " + other.gameObject.name); 
 
-        if (other.CompareTag("Water")) // Check if object has "Water" tag
+        if (other.CompareTag("Water")) 
         {
             Debug.Log("Player hit water! Losing a heart...");
-            playerHealth--;
+            ScoreManager.instance.LoseLife();
 
             if (playerHealth <= 0)
             {
                 Debug.Log("Game Over!");
-                // Add Game Over logic (like showing UI or reloading the scene)
+                
                 return;
             }
 
@@ -42,9 +42,9 @@ public class PlayerRespawn : MonoBehaviour
     {
         if (rb != null)
         {
-            rb.velocity = Vector3.zero; // Stop all movement
-            rb.angularVelocity = Vector3.zero; // Stop any rotation forces
-            transform.position = respawnPoint.position; // Move player
+            rb.velocity = Vector3.zero; 
+            rb.angularVelocity = Vector3.zero; 
+            transform.position = respawnPoint.position; 
         }
         else
         {
