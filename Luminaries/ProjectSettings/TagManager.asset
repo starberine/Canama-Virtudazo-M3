@@ -6,6 +6,12 @@ TagManager:
   tags:
   - Terrain
   - Water
+  - Enemy
+  - BeeHead
+  - PlayerAttack
+  - Meadowlands
+  - Shroomville
+  - Groves
   layers:
   - Default
   - TransparentFX
@@ -17,8 +23,8 @@ TagManager:
   - Camera
   - Wisp
   - Water
-  - 
-  - 
+  - Enemy
+  - PlayerAttack
   - 
   - 
   - 

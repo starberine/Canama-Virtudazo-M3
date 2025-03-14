@@ -2,26 +2,34 @@ using UnityEngine;
 
 public class PlayerRespawn : MonoBehaviour
 {
-    public Transform respawnPoint; 
-    public int playerHealth = 3; 
+    public Transform meadowlandsRespawn;
+    public Transform grovesRespawn;
+    public Transform shroomvilleRespawn;
 
-    private Rigidbody rb; 
+    private Transform currentRespawnPoint;
+    private Rigidbody rb;
+    public int playerHealth = 3;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-
-        if (respawnPoint == null)
-        {
-            Debug.LogError("RespawnPoint is not assigned! Assign it in the Inspector.");
-        }
+        currentRespawnPoint = meadowlandsRespawn; // Default respawn point
     }
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collided with: " + other.gameObject.name); 
+        Debug.Log("Collided with: " + other.gameObject.name);
 
-        if (other.CompareTag("Water")) 
+        // Detect area and set respawn point
+        if (other.CompareTag("Meadowlands"))
+            currentRespawnPoint = meadowlandsRespawn;
+        else if (other.CompareTag("Groves"))
+            currentRespawnPoint = grovesRespawn;
+        else if (other.CompareTag("Shroomville"))
+            currentRespawnPoint = shroomvilleRespawn;
+
+        // Handle water collision
+        if (other.CompareTag("Water"))
         {
             Debug.Log("Player hit water! Losing a heart...");
             ScoreManager.instance.LoseLife();
@@ -29,7 +37,6 @@ public class PlayerRespawn : MonoBehaviour
             if (playerHealth <= 0)
             {
                 Debug.Log("Game Over!");
-                
                 return;
             }
 
@@ -42,15 +49,15 @@ public class PlayerRespawn : MonoBehaviour
     {
         if (rb != null)
         {
-            rb.velocity = Vector3.zero; 
-            rb.angularVelocity = Vector3.zero; 
-            transform.position = respawnPoint.position; 
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            transform.position = currentRespawnPoint.position;
         }
         else
         {
-            transform.position = respawnPoint.position;
+            transform.position = currentRespawnPoint.position;
         }
 
-        Debug.Log("Player respawned at: " + respawnPoint.position);
+        Debug.Log("Player respawned at: " + currentRespawnPoint.position);
     }
 }
