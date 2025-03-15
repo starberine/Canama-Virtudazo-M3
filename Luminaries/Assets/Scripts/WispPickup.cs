@@ -2,19 +2,18 @@ using UnityEngine;
 
 public class WispPickup : MonoBehaviour
 {
-    public Light pointLight; // Assign in Inspector
-    public float lightDuration = 10f; // Set the duration for the light
+    public Light pointLight; 
+    public float lightDuration = 10f; 
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Wisp collected!"); 
             ScoreManager.instance.GainWisp();
+            AudioManager.instance.PlayCollectSFX();
 
             if (pointLight != null)
             {
-                Debug.Log("Activating light for " + lightDuration + " seconds.");
                 ScoreManager.instance.ActivateLightForDuration(pointLight, lightDuration);
             }
             else
@@ -22,7 +21,7 @@ public class WispPickup : MonoBehaviour
                 Debug.Log("Point Light is not assigned!");
             }
 
-            Destroy(gameObject); // Safe to destroy now!
+            Destroy(gameObject); 
         }
     }
 }

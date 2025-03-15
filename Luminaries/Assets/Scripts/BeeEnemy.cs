@@ -4,7 +4,6 @@ public class BeeEnemy : MonoBehaviour
 {
     public float moveSpeed = 3f;
     public float detectionRange = 5f;
-
     private Transform player;
     private bool isChasing = false;
     private float groundY;
@@ -16,7 +15,7 @@ public class BeeEnemy : MonoBehaviour
     {
         groundY = transform.position.y;
         beeCollider = GetComponent<Collider>();
-        beeRenderer = GetComponentInChildren<Renderer>(); // Fix for 3D model as child
+        beeRenderer = GetComponentInChildren<Renderer>(); 
     }
 
     private void Update()
@@ -72,12 +71,11 @@ public class BeeEnemy : MonoBehaviour
     {
         if (isDefeated) return;
 
-        if (other.CompareTag("PlayerAttack")) // Simplified to match the attack collider
+        if (other.CompareTag("PlayerAttack")) 
         {
             Die();
         }
     }
-
 
     private void DamagePlayer()
     {
@@ -86,12 +84,11 @@ public class BeeEnemy : MonoBehaviour
     }
 
     private void Die()
-{
-    isDefeated = true;
-    Debug.Log("Bee defeated!");
-
-    Destroy(gameObject); // Instantly destroy the bee
-}
+    {
+        isDefeated = true;
+        AudioManager.instance.PlayEnemyDeathSFX();
+        Destroy(gameObject); 
+    }
 
     private void OnDrawGizmosSelected()
     {

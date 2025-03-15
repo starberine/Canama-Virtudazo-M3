@@ -9,11 +9,13 @@ public class GameOverView : MonoBehaviour
 
     public void OnRetryButtonClicked()
     {
+        AudioManager.instance.PlaySFX(AudioManager.instance.buttonPressSFX);
         SceneManager.LoadScene("TestGameScene");
     }
 
     public void OnMainMenuButtonClicked()
     {
+        AudioManager.instance.PlaySFX(AudioManager.instance.buttonPressSFX);
         SceneManager.LoadScene("MainMenuScene");
     }
 }

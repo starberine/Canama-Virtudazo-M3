@@ -26,7 +26,11 @@ public class MainMenuView : View
 
     private void SetupButton(Button button, Sprite normal, Sprite pressed, UnityEngine.Events.UnityAction action)
     {
-        button.onClick.AddListener(action);
+        button.onClick.AddListener(() =>
+        {
+            AudioManager.instance.PlaySFX(AudioManager.instance.buttonPressSFX); // Play button press sound
+            action.Invoke();
+        });
 
         var spriteState = new SpriteState
         {
@@ -39,19 +43,16 @@ public class MainMenuView : View
 
     private void OnPlayPressed()
     {
-        Debug.Log("Play button pressed!");
         SceneManager.LoadScene("TestGameScene");
     }
 
     private void OnExitPressed()
     {
-        Debug.Log("Exit button pressed!");
         Application.Quit();
     }
 
     private void OnSettingsPressed()
     {
-        Debug.Log("Settings button pressed!");
         ViewManager.Show<SettingsMenuView>();
     }
 }

@@ -1,7 +1,8 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections; // Import for Coroutine support
+using System.Collections;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -10,11 +11,12 @@ public class ScoreManager : MonoBehaviour
     public int playerLives = 5;
     public int wispsCollected = 0;
 
-    public Image[] heartIcons; // Assign in Inspector
+    public Image[] heartIcons;
     public Sprite fullHeart;
     public Sprite emptyHeart;
 
-    public TMP_Text wispCounterText; // Use TMP_Text for TextMeshPro
+    public TMP_Text wispCounterText;
+    public TMP_Text messageText;
 
     private void Awake()
     {
@@ -35,8 +37,7 @@ public class ScoreManager : MonoBehaviour
 
         if (playerLives <= 0)
         {
-            Debug.Log("Game Over!");
-            // Trigger Game Over logic here
+            SceneManager.LoadScene("GameOverScene");
         }
     }
 
@@ -44,6 +45,26 @@ public class ScoreManager : MonoBehaviour
     {
         wispsCollected++;
         UpdateWispCounter();
+    }
+
+    public void TrySubmitWisps()
+    {
+        if (wispsCollected >= 8)
+        {
+            SceneManager.LoadScene("GameWinScene");
+        }
+        else
+        {
+            StartCoroutine(ShowMessage($"The sword awaits, but only the worthy shall prevail."));
+        }
+    }
+
+    private IEnumerator ShowMessage(string message)
+    {
+        messageText.text = message;
+        messageText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        messageText.gameObject.SetActive(false);
     }
 
     public void ActivateLightForDuration(Light pointLight, float duration)
@@ -79,4 +100,4 @@ public class ScoreManager : MonoBehaviour
     {
         wispCounterText.text = $"Wisps: {wispsCollected}";
     }
-}
+} 
