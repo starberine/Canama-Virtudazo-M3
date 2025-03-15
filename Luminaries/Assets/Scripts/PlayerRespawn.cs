@@ -13,14 +13,14 @@ public class PlayerRespawn : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        currentRespawnPoint = meadowlandsRespawn; // Default respawn point
+        currentRespawnPoint = meadowlandsRespawn;
     }
 
     void OnTriggerEnter(Collider other)
     {
         Debug.Log("Collided with: " + other.gameObject.name);
 
-        // Detect area and set respawn point
+        
         if (other.CompareTag("Meadowlands"))
             currentRespawnPoint = meadowlandsRespawn;
         else if (other.CompareTag("Groves"))
@@ -28,7 +28,7 @@ public class PlayerRespawn : MonoBehaviour
         else if (other.CompareTag("Shroomville"))
             currentRespawnPoint = shroomvilleRespawn;
 
-        // Handle water collision
+        
         if (other.CompareTag("Water"))
         {
             Debug.Log("Player hit water! Losing a heart...");

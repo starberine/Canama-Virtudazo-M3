@@ -13,17 +13,17 @@ public class SettingsMenuView : View
 
     private void Start()
     {
-        // Initialize slider values
+        
         masterSlider.value = AudioManager.instance.GetMasterVolume();
         bgmSlider.value = AudioManager.instance.GetBGMVolume();
         sfxSlider.value = AudioManager.instance.GetSFXVolume();
 
-        // Add listeners to sliders
+        
         masterSlider.onValueChanged.AddListener(SetMasterVolume);
         bgmSlider.onValueChanged.AddListener(SetBGMVolume);
         sfxSlider.onValueChanged.AddListener(SetSFXVolume);
 
-        // Back button listener
+       
         backButton.onClick.AddListener(OnBackPressed);
     }
 

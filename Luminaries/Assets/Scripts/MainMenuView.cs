@@ -28,7 +28,7 @@ public class MainMenuView : View
     {
         button.onClick.AddListener(() =>
         {
-            AudioManager.instance.PlaySFX(AudioManager.instance.buttonPressSFX); // Play button press sound
+            AudioManager.instance.PlaySFX(AudioManager.instance.buttonPressSFX);
             action.Invoke();
         });
 

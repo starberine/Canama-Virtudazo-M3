@@ -3,8 +3,8 @@ using System.Collections;
 
 public class PlatformActivator : MonoBehaviour
 {
-    public GameObject[] platforms; // Assign all platforms in the Inspector
-    public float appearDuration = 10f; // Time before they disappear
+    public GameObject[] platforms; 
+    public float appearDuration = 10f; 
 
     void OnTriggerEnter(Collider other)
     {
@@ -17,9 +17,9 @@ public class PlatformActivator : MonoBehaviour
 
     IEnumerator ActivatePlatforms()
     {
-        SetPlatformsState(true); // Make platforms appear
+        SetPlatformsState(true); 
         yield return new WaitForSeconds(appearDuration);
-        SetPlatformsState(false); // Make platforms disappear
+        SetPlatformsState(false); 
     }
 
     void SetPlatformsState(bool state)
@@ -28,7 +28,7 @@ public class PlatformActivator : MonoBehaviour
         {
             if (platform != null)
             {
-                platform.SetActive(state); // Show or hide platform
+                platform.SetActive(state); 
             }
         }
     }
