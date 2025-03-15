@@ -12,6 +12,9 @@ TagManager:
   - Meadowlands
   - Shroomville
   - Groves
+  - DisappearingPlatforms
+  - Pushable
+  - Bridge
   layers:
   - Default
   - TransparentFX

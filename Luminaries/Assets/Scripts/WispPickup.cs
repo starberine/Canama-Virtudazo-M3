@@ -3,6 +3,7 @@ using UnityEngine;
 public class WispPickup : MonoBehaviour
 {
     public Light pointLight; // Assign in Inspector
+    public float lightDuration = 10f; // Set the duration for the light
 
     void OnTriggerEnter(Collider other)
     {
@@ -13,16 +14,15 @@ public class WispPickup : MonoBehaviour
 
             if (pointLight != null)
             {
-                Debug.Log("Turning on light!");
-                pointLight.enabled = true;
-                pointLight.gameObject.SetActive(true); // Force enable
+                Debug.Log("Activating light for " + lightDuration + " seconds.");
+                ScoreManager.instance.ActivateLightForDuration(pointLight, lightDuration);
             }
             else
             {
                 Debug.Log("Point Light is not assigned!");
             }
 
-            Destroy(gameObject);
+            Destroy(gameObject); // Safe to destroy now!
         }
     }
 }
